@@ -66,6 +66,23 @@
      @enderror
     </div>
     <div class="form-gorup mb-3">
+        <label for="category_id" class="form-label">Category</label>
+        <select  name="category_id" id="category_id" class="form-select" >
+        <option value="">Please chose your category</option>
+        @foreach ($categories as $category)
+            <option @selected(old('category_id',$product->category_id)===$category->id)  value="{{$category->id}}">{{$category->name}}</option>
+ 
+        @endforeach
+        </select>
+        @error('category')
+     <div class="text-danger">
+         {{$message}}
+     </div>
+    
+         
+     @enderror
+    </div>
+    <div class="form-gorup mb-3">
         <input type="submit" name="" id="" class="btn btn-primary" value="Ajouter"/>
     </div>
     

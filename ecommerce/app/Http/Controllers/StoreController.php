@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\panier;
 use Illuminate\Http\Request;
 use App\Http\Requests\ProductRequest;
 
@@ -13,8 +14,17 @@ class StoreController extends Controller
      */
     public function index()
     {
-        $products = Product::query()->orderBy('created_at','desc')->get();
-        return view('store.index', compact('products'));
+       // $products = Product::query()->orderBy('created_at','desc')->get();
+       // return view('store.index', compact('products'));
+       $products = Product::query()->with('category')->paginate(10);
+       //$paniers=Panier::all();
+       $idProduits = Panier::pluck('id_produit');
+
+       // Récupérer les détails des produits dans la table `products` en fonction de leurs IDs
+       $productsInPanier = Product::whereIn('id', $idProduits)->get();
+      
+    //  dd($paniers);
+       return view('store.index',compact('products','productsInPanier'));
     }
 
     /**

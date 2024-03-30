@@ -33,6 +33,7 @@
             <td>
             
                 <div class="btn-group gap-3">
+                    <a href="{{route('categories.show',$categroy)}}" class="btn btn-info">Show</a>
                     <a href="{{route('categories.edit',$categroy)}}" class="btn btn-primary">Update</a>
                     <form action="{{route('categories.destroy',$categroy->id)}}" method="POST">
                         @csrf

@@ -10,6 +10,15 @@ class Client extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nom', 'prenom', 'email', 'password',
+        'nom', 'prenom', 'email', 'password','telephone','ville','rue','code postal'
     ];
+    public function commandes()
+    {
+        return $this->hasMany(Commande::class, 'id_client');
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'id_client');
+    }
 }

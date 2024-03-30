@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
@@ -15,6 +17,11 @@ class Product extends Model
         'description',
         'quantity',
         'price',
-        'image'
+        'image',
+        'category_id'
     ];//pour que les donnees sera ajoute
+    public function category():BelongsTo
+    { 
+        return $this->belongsTo(Category::class);
+    }
 }

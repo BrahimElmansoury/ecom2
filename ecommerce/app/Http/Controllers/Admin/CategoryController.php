@@ -3,79 +3,47 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use Illuminate\Http\Request;
-use App\Http\Requests\CategoryRequest;
-
-
-
-use Illuminate\Http\RedirectResponse;
+use App\Models\Category;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $categories = Category::query()->paginate(1);
-        return view('category.index', compact('categories'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $category=new Category();
-        return view('category.create',compact('category'));
-    }
-    
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(CategoryRequest  $request): RedirectResponse
-    {
-        
-        
-      
-        Category::create($request->validated());
-        return to_route('categories.index')->with('success',"Category created successfully");
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Category $category)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Category $category)
     {
-        
-        return view('category.edit', compact('category'));
+        return view('admin.cat_edit', compact('category'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(CategoryRequest $request, Category $category)
+    public function update(Request $request, Category $category)
     {
-        $category->fill($request->validated())->save();
-        return to_route('categories.index')->with('success', 'Category updated successfully');
+        $request->validate([
+            'cat_name' => 'required|string',
+            'cat_type' => 'required|string',
+        ]);
+
+        $category->update([
+            'category' => $request->cat_name,
+            'type_category' => $request->cat_type,
+        ]);
+
+        return redirect()->route('admin.category')->with('success', 'Category updated successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Category $category)
-    {
+   public function destroy(Category $category)
+{
+    // Vérifier si la catégorie existe
+    if (!$category) {
+        return redirect()->route('admin.category')->with('error', 'Category not found');
+    }
+
+    try {
+        // Supprimer la catégorie
         $category->delete();
-        return to_route('categories.index')->with('success', 'Category deleted successfully');
+        return redirect()->route('admin.category')->with('success', 'Category deleted successfully');
+    } catch (\Exception $e) {
+        // Gérer les erreurs lors de la suppression
+        return redirect()->route('admin.category')->with('error', 'Failed to delete category');
     }
+}
+
+
 }
